@@ -12,7 +12,7 @@ export default class CreateMeasure extends React.Component {
         this.state = {
             name: "",
             exchangeRatio: "",
-            sum: "",
+            sum: "0",
 
             redirect: false
         }
@@ -33,7 +33,7 @@ export default class CreateMeasure extends React.Component {
 
         this.setState({redirect: true})
 
-        this.props.handleAddMeasure(measure)
+        this.props.onAddMeasure(measure)
     }
 
     render() {

@@ -13,7 +13,7 @@ export default function Balance(props) {
                 {measures.map(measure => <Measure 
                     key={measure.name} 
                     measure={measure}
-                    handleAddition={props.handleAddition}/>)}
+                    onAddition={props.onAddition}/>)}
             </div>
         </div>
     )

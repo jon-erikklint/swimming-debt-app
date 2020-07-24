@@ -29,7 +29,7 @@ export default class Measure extends React.Component {
         if(value === "" || isNaN(value)) return;
 
         this.setState({inputValue: "", errors: []})
-        this.props.handleAddition(this.props.measure.name, parseFloat(value))
+        this.props.onAddition(this.props.measure.name, parseFloat(value))
     }
 
     render() {
@@ -41,8 +41,8 @@ export default class Measure extends React.Component {
                 <TextInput 
                     inputValue={this.state.inputValue}
                     errors={this.state.errors}
-                    handleTextChange={this.handleTextChange}
-                    handleSubmit={this.handleSubmit}
+                    onTextChange={this.handleTextChange}
+                    onSubmit={this.handleSubmit}
                 />
             </div>
         )

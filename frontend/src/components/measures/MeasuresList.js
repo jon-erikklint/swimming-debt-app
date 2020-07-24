@@ -10,7 +10,10 @@ export default function MeasuresList(props) {
             <Link to="/measure/new">Luo uusi mittari</Link>
             <ul>
                 {props.measures.map(measure => 
-                    <MeasureControl key={measure.name} measure={measure}></MeasureControl>
+                    <MeasureControl key={measure.name} 
+                                    measure={measure}
+                                    onClick={e => props.onDeleteMeasure(measure)}>
+                    </MeasureControl>
                 )}
             </ul>
         </div>

@@ -41,6 +41,10 @@ export default class App extends React.Component {
         this.setState({measures: [...this.state.measures, measure]})
     }
 
+    handleDeleteMeasure = measureToDelete => {
+        this.setState({measures: this.state.measures.filter(measure => measure.name !== measureToDelete.name)})
+    }
+
     render() {
         const measures = this.state.measures
         const links = [
@@ -54,18 +58,19 @@ export default class App extends React.Component {
 
             <Switch>
                 <Route path="/measure/new">
-                    <CreateMeasure measures={measures} handleAddMeasure={this.handleAddMeasure}/>
+                    <CreateMeasure measures={measures} onAddMeasure={this.handleAddMeasure}/>
                 </Route>
                 <Route path="/measure/:name">
                     <MeasureHistory measures={measures}/>
                 </Route>
                 <Route path="/measures">
-                    <MeasuresList measures={measures}/>
+                    <MeasuresList measures={measures}
+                                onDeleteMeasure={this.handleDeleteMeasure}/>
                 </Route>
                 <Route path="/">
                     <Balance measures={measures}
                             balance={this.state.measures.reduce((previous, current) => previous + (current.sum * current.exchangeRatio), 0)}
-                            handleAddition={this.handleAddition}/>
+                            onAddition={this.handleAddition}/>
                 </Route>
             </Switch>
         </Router>
