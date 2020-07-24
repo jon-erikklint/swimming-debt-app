@@ -1,0 +1,12 @@
+.balanceDisplay {
+    font-size: larger;
+    margin-bottom: 1em;
+}
+
+.balanceDisplay .positive{
+    color: green;
+}
+
+.balanceDisplay .negative{
+    color: red;
+}

@@ -1,0 +1,13 @@
+.textInput button {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+input.erronous {
+    border-color: red;
+    border-style: solid;
+}
+
+input.erronous:focus {
+    outline-color: red;
+}
