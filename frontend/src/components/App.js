@@ -4,9 +4,12 @@ import {
     Switch, Route
 } from "react-router-dom"
 
+import LinkBar from "./LinkBar"
 import Balance from "./balance/Balance"
+import MeasureHistory from "./history/MeasureHistory"
+import MeasuresList from "./measures/MeasuresList"
 
-import CalculatorModel from "../models/CalculatorModel"
+import MeasureModel from "../models/MeasureModel"
 
 export default class App extends React.Component {
     constructor(props) {
@@ -14,40 +17,51 @@ export default class App extends React.Component {
 
         this.state = {
             balance: 0,
-            calculators: [new CalculatorModel("Asd", 0, 1), new CalculatorModel("Wasd", 0, 0.2), new CalculatorModel("Gasd", 0, -1)]
+            measures: [new MeasureModel("Asd", 0, 1), new MeasureModel("Wasd", 0, 0.2), new MeasureModel("Gasd", 0, -1)]
         }
     }
 
     handleAddition = (name, addition) => {
-        this.updateCalculator(name, calculator => {
-            const sum = calculator.sum + addition
+        this.updateMeasure(name, measure => {
+            const sum = measure.sum + addition
 
-            this.addBalance(calculator, addition)
+            this.addBalance(measure, addition)
     
-            return {...calculator, sum, history: calculator.history.concat([addition])}
+            return {...measure, sum, history: measure.history.concat([addition])}
         })
     }
 
-    updateCalculator(name, func) {
-        const calculators = this.state.calculators
-            .map(calculator => calculator.name == name ? func(calculator) : calculator)
-        this.setState({calculators})
+    updateMeasure(name, func) {
+        const measures = this.state.measures
+            .map(measure => measure.name == name ? func(measure) : measure)
+        this.setState({measures})
     }
 
-    addBalance(calculator, amount) {
-        const balance = this.state.balance + (amount * calculator.exchangeRatio);
+    addBalance(measure, amount) {
+        const balance = this.state.balance + (amount * measure.exchangeRatio);
         this.setState({balance})
     }
 
     render() {
+        const measures = this.state.measures
+        const links = [
+            {text: "Etusivu", link: "/"},
+            {text: "Mittarit", link: "/measures"},
+        ]
+
         return (
         <Router>
+            <LinkBar links={links}/>
+
             <Switch>
-                <Route path="/calculator">
-                    <div>moi</div>
+                <Route path="/measure/:name">
+                    <MeasureHistory measures={measures}/>
+                </Route>
+                <Route path="/measures">
+                    <MeasuresList measures={measures}/>
                 </Route>
                 <Route path="/">
-                    <Balance calculators={this.state.calculators}
+                    <Balance measures={measures}
                             balance={this.state.balance}
                             handleAddition={this.handleAddition}/>
                 </Route>

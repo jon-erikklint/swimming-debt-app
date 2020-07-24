@@ -1,10 +1,10 @@
 import React from 'react';
-import "./Calculator.css"
+import "./Measure.css"
 
 import TextInput from "../common/TextInput"
-import CalculatorInfo from "./CalculatorInfo"
+import MeasureHeader from "./MeasureHeader"
 
-export default class Calculator extends React.Component {
+export default class Measure extends React.Component {
     constructor(props) {
         super(props)
 
@@ -25,19 +25,19 @@ export default class Calculator extends React.Component {
     }
 
     handleSubmit = e => {
-        const value = this.state.inputValue.replace(",", ".")
-        if(isNaN(value)) return;
+        const value = this.state.inputValue.replace(",", ".").trim()
+        if(value === "" || isNaN(value)) return;
 
         this.setState({inputValue: "", errors: []})
-        this.props.handleAddition(this.props.model.name, parseFloat(value))
+        this.props.handleAddition(this.props.measure.name, parseFloat(value))
     }
 
     render() {
-        const calculator = this.props.model
+        const measure = this.props.measure
 
         return (
-            <div className="calculator">
-                <CalculatorInfo calculator={calculator}/>
+            <div className="measure">
+                <MeasureHeader measure={measure}/>
                 <TextInput 
                     inputValue={this.state.inputValue}
                     errors={this.state.errors}

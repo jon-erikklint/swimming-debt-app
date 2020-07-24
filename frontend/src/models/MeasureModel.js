@@ -1,4 +1,4 @@
-export default class CalculatorModel {
+export default class MeasureModel {
     constructor(name, sum, exchangeRatio) {
         this.name = name
         this.exchangeRatio = exchangeRatio

@@ -1,0 +1,9 @@
+.linkBar {
+    height: 1em;
+    padding: 0.5em;
+}
+
+.linkBarItem {
+    display: inline-block;
+    margin-right: 1em;
+}

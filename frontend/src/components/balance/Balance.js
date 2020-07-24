@@ -1,18 +1,18 @@
 import React from 'react';
 
-import Calculator from "./Calculator"
+import Measure from "./Measure"
 import BalanceDisplay from "./BalanceDisplay"
 
 export default function Balance(props) {
-    const calculators = props.calculators
+    const measures = props.measures
 
     return (
         <div>
             <BalanceDisplay balance={props.balance}/>
             <div>
-                {calculators.map(calculator => <Calculator 
-                    key={calculator.name} 
-                    model={calculator}
+                {measures.map(measure => <Measure 
+                    key={measure.name} 
+                    measure={measure}
                     handleAddition={props.handleAddition}/>)}
             </div>
         </div>
