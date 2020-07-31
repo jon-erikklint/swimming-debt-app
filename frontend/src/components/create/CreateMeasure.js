@@ -1,84 +1,63 @@
 import React from 'react';
-import { Redirect } from "react-router-dom"
 
+import EditForm from "../common/EditForm"
 import TextField from "../common/TextField"
+
+import redirectOnSubmit from "../hoc/redirectOnSubmit"
 
 import MeasureModel from "../../models/MeasureModel"
 
-export default class CreateMeasure extends React.Component {
-    constructor(props) {
-        super(props)
+import {validName, validFloat} from "../../helpers/validators"
+import {formatFloat} from "../../helpers/formatters"
 
-        this.state = {
-            name: "",
-            exchangeRatio: "",
-            sum: "0",
-
-            redirect: false
-        }
-    }
-
-    handleChange(type, value) {
-        const obj = {}
-        obj[type] = value
-        this.setState(obj)
-    }
-
-    handleSubmit = e => {
-        const name = this.state.name
-        const sum = parseFloat(this.state.sum.replace(",", ".").trim())
-        const exchangeRatio = parseFloat(this.state.exchangeRatio.replace(",", ".").trim())
-        const orderId = this.props.measures.reduce((max, current) => current.orderId > max ? current.orderId : max, -1) + 1
+export function CreateMeasure(props) {
+    const handleSubmit = obj => {
+        const {name, sum, exchangeRatio} = obj
+        const orderId = props.measures.reduce((max, current) => current.orderId > max ? current.orderId : max, -1) + 1
 
         const measure = new MeasureModel(name, sum, exchangeRatio, orderId)
 
-        this.setState({redirect: true})
-
-        this.props.onAddMeasure(measure)
+        props.onSubmit(measure)
     }
 
-    render() {
-        if (this.state.redirect) return <Redirect to="/measures"/>
+    const components = [
+        {
+            label: "Nimi",
+            field: "name",
+            value: "",
+            Component: TextField,
+            editable: true,
+            validator: (measures => name => validName(name, measures))(props.measures)
+        },
+        {
+            label: "Vaihtosuhde",
+            field: "exchangeRatio",
+            value: "1",
+            Component: TextField,
+            editable: true,
+            validator: validFloat,
+            formatter: formatFloat
+        },
+        {
+            label: "Alkusumma",
+            field: "sum",
+            value: "0",
+            Component: TextField,
+            editable: true,
+            validator: validFloat,
+            formatter: formatFloat
+        }
+    ]
 
-        const nameError = validName(this.state.name, this.props.measures)
-        const ratioError = validFloat(this.state.exchangeRatio)
-        const sumError = validFloat(this.state.sum)
-
-        const allValid = !nameError && !ratioError && !sumError
-
-        return (
-            <div>
-                <h1>Luo uusi mittari</h1>
-                <TextField label="Nimi" 
-                            value={this.state.name} 
-                            onChange={val => this.handleChange("name", val)}
-                            error={nameError}/>
-                <TextField label="Vaihtosuhde" 
-                            value={this.state.exchangeRatio} 
-                            onChange={val => this.handleChange("exchangeRatio", val)}
-                            error={ratioError}/>
-                <TextField label="Alkusumma" 
-                            value={this.state.sum} 
-                            onChange={val => this.handleChange("sum", val)}
-                            error={sumError}/>
-                <button disabled={!allValid} onClick={this.handleSubmit}>Luo</button>
-            </div>
-        )
-    }
+    return (
+        <React.Fragment>
+            <EditForm headerText="Luo uusi mittari"
+                        submitText="Luo"
+                        onSubmit={handleSubmit}
+                        components={components}/>
+        </React.Fragment>
+    )
 }
 
-function validName(name, measures) {
-    if(name === null || name === undefined || name.length === 0) return "Nimi ei saa olla tyhjä";
-
-    return measures.find(measure => measure.name === name) == null ? null : "Mittari " + name + " on jo olemassa"
-}
-
-function validFloat(text) {
-    if(text === null || text === undefined) return "Syötä luku";
-
-    text = text.replace(",", ".").trim()
-
-    if(text.length === 0) return "Syötä luku"
-
-    return isNaN(text) ? "Syötetty teksti ei ole luku" : null
-}
+const CreateMeasureRedirect = redirectOnSubmit(CreateMeasure, "/measures")
+export default CreateMeasureRedirect

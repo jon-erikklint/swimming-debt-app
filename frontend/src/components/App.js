@@ -8,9 +8,15 @@ import LinkBar from "./LinkBar"
 import Balance from "./balance/Balance"
 import MeasureHistory from "./history/MeasureHistory"
 import MeasuresList from "./measures/MeasuresList"
-import CreateMeasure from "./create/CreateMeasure"
+import CreateMeasureRedirect from "./create/CreateMeasure"
+import EditMeasure from "./edit/EditMeasure"
+
+import paramMeasureWrapper from "./hoc/paramMeasureWrapper"
 
 import MeasureModel from "../models/MeasureModel"
+
+const WrappedMeasureHistory = paramMeasureWrapper(MeasureHistory)
+const WrappedEditMeasure = paramMeasureWrapper(EditMeasure)
 
 export default class App extends React.Component {
     constructor(props) {
@@ -29,6 +35,10 @@ export default class App extends React.Component {
     
             return {...measure, sum, history: measure.history.concat([addition])}
         })
+    }
+
+    handleEditMeasure = newMeasure => {
+        this.updateMeasure(newMeasure.name, _ => newMeasure)
     }
 
     updateMeasure(name, func) {
@@ -78,11 +88,14 @@ export default class App extends React.Component {
             <LinkBar links={links}/>
 
             <Switch>
+                <Route path="/measure/edit/:name">
+                    <WrappedEditMeasure measures={measures} onSubmit={this.handleEditMeasure}/>
+                </Route>
                 <Route path="/measure/new">
-                    <CreateMeasure measures={measures} onAddMeasure={this.handleAddMeasure}/>
+                    <CreateMeasureRedirect measures={measures} onSubmit={this.handleAddMeasure}/>
                 </Route>
                 <Route path="/measure/:name">
-                    <MeasureHistory measures={measures}/>
+                    <WrappedMeasureHistory measures={measures}/>
                 </Route>
                 <Route path="/measures">
                     <MeasuresList measures={measures}

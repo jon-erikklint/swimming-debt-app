@@ -15,6 +15,9 @@ export default function MeasureControl(props) {
             <Link to={"/measure/" + measure.name}>
                 {measure.name}
             </Link>
+            <Link className="listElement" to={"/measure/edit/" + measure.name}>
+                Muokkaa
+            </Link>
             <span className="listElement clickable" onClick={handleClick}>
                 Poista
             </span>
