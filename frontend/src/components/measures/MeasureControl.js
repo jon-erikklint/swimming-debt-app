@@ -7,7 +7,7 @@ export default function MeasureControl(props) {
 
     function handleClick(e) {
         const answer = window.confirm("Haluatko varmasti poistaa mittarin \"" + measure.name + "\"?")
-        if (answer) props.onClick(e)
+        if (answer) props.onDelete(e)
     }
 
     return (
@@ -15,8 +15,31 @@ export default function MeasureControl(props) {
             <Link to={"/measure/" + measure.name}>
                 {measure.name}
             </Link>
-            <span className="remove" onClick={handleClick}>
+            <span className="listElement clickable" onClick={handleClick}>
                 Poista
+            </span>
+            <span className="listElement">
+                Järjestä:
+
+                {props.hasOrderUp 
+                    ? (
+                    <span className="listElementPart clickable"
+                            onClick={e => props.onReorder(measure, true)}>
+                        ^
+                    </span>
+                    )
+                    : null
+                }
+
+                {props.hasOrderDown
+                    ? (
+                    <span className="listElementPart clickable"
+                        onClick={e => props.onReorder(measure, false)}>
+                        v
+                    </span>
+                    )
+                    : null
+                }
             </span>
         </li>
     )

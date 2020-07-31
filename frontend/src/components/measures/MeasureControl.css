@@ -2,7 +2,14 @@
     margin-bottom: 0.25em;
 }
 
-.remove {
+.listElement {
     margin-left: 1em;
+}
+
+.listElementPart {
+    margin-left: 5px;
+}
+
+.clickable {
     cursor: pointer;
 }

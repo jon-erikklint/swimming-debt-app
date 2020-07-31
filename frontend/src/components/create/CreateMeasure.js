@@ -28,8 +28,9 @@ export default class CreateMeasure extends React.Component {
         const name = this.state.name
         const sum = parseFloat(this.state.sum.replace(",", ".").trim())
         const exchangeRatio = parseFloat(this.state.exchangeRatio.replace(",", ".").trim())
+        const orderId = this.props.measures.reduce((max, current) => current.orderId > max ? current.orderId : max, -1) + 1
 
-        const measure = new MeasureModel(name, sum, exchangeRatio)
+        const measure = new MeasureModel(name, sum, exchangeRatio, orderId)
 
         this.setState({redirect: true})
 
