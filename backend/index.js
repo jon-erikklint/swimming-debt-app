@@ -8,7 +8,7 @@ app.get("/", (req, res) => {
     res.send("Moi")
 })
 
-const measures = [
+let measures = [
     {
         name: "Asd",
         exchangeRatio: 1,
@@ -19,17 +19,17 @@ const measures = [
         name: "Gasd",
         exchangeRatio: 1,
         sum: 0,
-        orderId: 0
+        orderId: 1
     }, 
     {
         name: "Wasd",
         exchangeRatio: -1,
         sum: 0,
-        orderId: 0
+        orderId: 2
     }
 ]
 
-const measurements = [
+let measurements = [
     {
         measure: "Asd",
         value: 1,
@@ -46,19 +46,14 @@ app.get("/api/measures/:name", (req, res) => {
     res.json(getMeasure(name))
 })
 
-app.get("/api/measurements/:measureName", (req, res) => {
-    const measure = req.params.measureName
-    res.json(measurements.filter(measurement => measurement.measure === measure))
-})
-
-app.delete("/api/measure/:name", (req, res) => {
+app.delete("/api/measures/:name", (req, res) => {
     const name = req.params.name
-    measurements = measurements.filter(measure => measure.name !== name)
+    measures = measures.filter(measure => measure.name !== name)
 
     res.status(204).end()
 })
 
-app.put("/api/measure/:name", (req, res) => {
+app.put("/api/measures", (req, res) => {
     const measure = req.body
 
     if (measure == null || measure.name == null || measure.exchangeRatio == null) {
@@ -66,46 +61,26 @@ app.put("/api/measure/:name", (req, res) => {
         return
     }
 
-    measure = updateMeasure(measure.name, measure.exchangeRatio)
+    const updatedMeasure = updateMeasure(measure.name, measure.exchangeRatio)
 
-    if (measure == null) res.status(404).end()
-    else res.json(measure)
+    if (updatedMeasure == null) res.status(404).end()
+    else res.json(updatedMeasure)
 })
 
 app.post("/api/measures", (req, res) => {
     const measure = req.body
     
     if (measure == null || measure.name == null || measure.exchangeRatio == null || measure.startValue == null || getMeasure(measure.name) != null) {
-        res.status(400).end()
+        res.status(400).json()
         return
     }
 
-    measure = addMeasure(measure.name, measure.exchangeRatio, measure.startValue)
+    const addedMeasure = addMeasure(measure.name, measure.exchangeRatio, measure.startValue)
 
-    res.json(measure)
+    res.json(addedMeasure)
 })
 
-app.post("/api/measurements/:measureName", (req, res) => {
-    const measurement = req.body
-
-    if (measurement == null || measurement.measure == null || measurement.value == null) {
-        res.status(400).end()
-        return
-    }
-
-    measure = getMeasure(measurement.measure)
-    if(measure == null) {
-        res.status(404).end()
-        return
-    }
-
-    measure.sum += measurement.value
-    measurement = measurement.addMeasurement(measurement.measure, measurement.value)
-
-    res.json(measurement)
-})
-
-app.post("/api/measures/swap/", (req, res) => {
+app.post("/api/measures/swap", (req, res) => {
     const measures = req.body
 
     if (measures == null || measures.first == null || measures.second == null) {
@@ -113,56 +88,86 @@ app.post("/api/measures/swap/", (req, res) => {
         return
     }
 
-    measure1 = getMeasure(measure.first)
-    measure2 = getMeasure(measure.second)
+    const swapped = swapMeasures(measures.first, measures.second)
 
-    if (measure1 == null || measure2 == null) {
+    res.status(swapped ? 200 : 400).end()
+})
+
+app.get("/api/measurements/:measureName", (req, res) => {
+    const measure = req.params.measureName
+    res.json(measurements.filter(measurement => measurement.measure === measure))
+})
+
+app.post("/api/measurements", (req, res) => {
+    const measurement = req.body
+
+    if (measurement == null || measurement.measure == null || measurement.value == null) {
         res.status(400).end()
         return
     }
 
-    const temp = measure1.orderId
-    measure1.orderId = measure2.orderId
-    measure2.orderId = temp
+    const newMeasurement = addMeasurement(measurement.measure, measurement.value)
 
-    res.status(200).end()
+    if(newMeasurement == null) {
+        res.status(404).end()
+        return
+    }
+
+    res.json(newMeasurement)
 })
 
-function getMeasure(measure) {
-    return measures.find(measure => measure.name === measure)
+function getMeasure(measureName) {
+    return measures.find(measure => measure.name === measureName)
 }
 
 function addMeasure(name, exchangeRatio, startValue) {
-    if (measure == null || measure.name == null || measure.exchangeRatio == null, measure.startValue == null) return null
-    
     const orderId = measures.reduce((max, current) => current.orderId > max ? current.orderId : max, -1) + 1
 
     const newMeasure = {
-        name: measure.name,
-        exchangeRatio: measure.exchangeRatio,
+        name: name,
+        exchangeRatio: exchangeRatio,
         sum: startValue,
         orderId: orderId
     }
 
     measures.push(newMeasure)
 
-    if(measure.startValue > 0) addMeasurement(measure.name, measure.startValue)
+    if(startValue > 0) addMeasurement(name, startValue)
 
     return newMeasure;
 }
 
-function addMeasurement(measure, value) {
+function addMeasurement(measureName, value) {
+    const measure = getMeasure(measureName)
+    if(measureName == null) return null
+
     const orderId = measurements.reduce((max, current) => current.orderId > max ? current.orderId : max, -1) + 1
 
     const measurement = {
-        measure: measure,
+        measure: measureName,
         value: value,
         orderId: orderId
     }
 
     measurements.push(measurement)
+    measure.sum += measurement.value
 
     return measurement
+}
+
+function swapMeasures(measureName1, measureName2) {
+    const measure1 = getMeasure(measureName1)
+    const measure2 = getMeasure(measureName2)
+
+    if (measure1 == null || measure2 == null) return false
+
+    const temp = measure1.orderId
+    measure1.orderId = measure2.orderId
+    measure2.orderId = temp
+
+    sortMeasures()
+
+    return true
 }
 
 function updateMeasure(name, exchangeRatio) {
@@ -173,6 +178,10 @@ function updateMeasure(name, exchangeRatio) {
     measure.exchangeRatio = exchangeRatio
 
     return measure
+}
+
+function sortMeasures() {
+    measures = measures.sort((measure1, measure2) => measure1.orderId - measure2.orderId)
 }
 
 const PORT = 3001
