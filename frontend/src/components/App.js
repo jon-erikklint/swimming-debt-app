@@ -16,7 +16,6 @@ import paramMeasureWrapper from "./hoc/paramMeasureWrapper"
 import MeasureModel from "../models/MeasureModel"
 
 const WrappedMeasureHistory = paramMeasureWrapper(MeasureHistory)
-const WrappedEditMeasure = paramMeasureWrapper(EditMeasure)
 
 export default class App extends React.Component {
     constructor(props) {
@@ -89,7 +88,7 @@ export default class App extends React.Component {
 
             <Switch>
                 <Route path="/measure/edit/:name">
-                    <WrappedEditMeasure measures={measures} onSubmit={this.handleEditMeasure}/>
+                    <EditMeasure onSubmit={this.handleEditMeasure}/>
                 </Route>
                 <Route path="/measure/new">
                     <CreateMeasureRedirect measures={measures} onSubmit={this.handleAddMeasure}/>

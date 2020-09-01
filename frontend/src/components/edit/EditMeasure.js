@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom"
+import axios from 'axios'
 
 import LabeledText from "../common/LabeledText"
 import TextField from "../common/TextField"
@@ -11,7 +13,18 @@ import {validFloat} from "../../helpers/validators"
 import {formatFloat} from "../../helpers/formatters"
 
 export function EditMeasure(props){
-    const measure = props.measure
+    const measureName = useParams().name
+    const [measure, setMeasure] = useState(undefined)
+
+    useEffect(() => {
+        console.log("asd")
+        axios.get("http://localhost:3001/api/measures/" + measureName)
+            .then(response => {
+                if(response.data != null && response.data !== "") setMeasure(response.data)
+            })
+    }, [])
+
+    if (measure == null) return null
 
     const handleSubmit = obj => {
         const {reset, ...fields} = obj
@@ -20,10 +33,15 @@ export function EditMeasure(props){
             ...fields
         }
 
-        if(reset) {
-            alteredMeasure.sum = 0
-            alteredMeasure.history = [0]
-        }
+        console.log(alteredMeasure)
+
+        const promises = [axios.put("http://localhost:3001/api/measures/", alteredMeasure)]
+        if (reset) promises.push(axios.delete("http://localhost:3001/api/measurements/" + measureName))
+
+        axios.all(promises).then(axios.spread((...responses) => {
+            console.log(responses[0])
+            if(reset) console.log(responses[1])
+        }))
 
         props.onSubmit(alteredMeasure)
     }

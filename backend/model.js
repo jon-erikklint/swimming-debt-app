@@ -39,6 +39,10 @@ function getMeasurements(measureName) {
     return measurements.filter(measurement => measurement.measure === measureName)
 }
 
+function deleteMeasurements(measureName) {
+    measurements = measurements.filter(measurement => measurement.measure !== measureName)
+}
+
 function addMeasure(name, exchangeRatio, startValue) {
     const orderId = measures.reduce((max, current) => current.orderId > max ? current.orderId : max, -1) + 1
 
@@ -108,5 +112,5 @@ function sortMeasures() {
 }
 
 module.exports = {
-    getMeasures, getMeasure, getMeasurements, deleteMeasure, addMeasure, addMeasurement, swapMeasures, updateMeasure
+    getMeasures, getMeasure, getMeasurements, deleteMeasure, addMeasure, addMeasurement, swapMeasures, updateMeasure, deleteMeasurements
 }
