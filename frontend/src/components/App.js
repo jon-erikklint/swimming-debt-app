@@ -36,10 +36,6 @@ export default class App extends React.Component {
         })
     }
 
-    handleEditMeasure = newMeasure => {
-        this.updateMeasure(newMeasure.name, _ => newMeasure)
-    }
-
     updateMeasure(name, func) {
         const measures = this.state.measures
             .map(measure => measure.name == name ? func(measure) : measure)
@@ -71,10 +67,6 @@ export default class App extends React.Component {
         this.setState({measures: [...this.state.measures, measure]})
     }
 
-    handleDeleteMeasure = measureToDelete => {
-        this.setState({measures: this.state.measures.filter(measure => measure.name !== measureToDelete.name)})
-    }
-
     render() {
         const measures = this.state.measures.sort((m1, m2) => m1.orderId - m2.orderId)
         const links = [
@@ -88,7 +80,7 @@ export default class App extends React.Component {
 
             <Switch>
                 <Route path="/measure/edit/:name">
-                    <EditMeasure onSubmit={this.handleEditMeasure}/>
+                    <EditMeasure/>
                 </Route>
                 <Route path="/measure/new">
                     <CreateMeasureRedirect measures={measures} onSubmit={this.handleAddMeasure}/>

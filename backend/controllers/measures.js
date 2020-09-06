@@ -45,17 +45,30 @@ measuresRouter.post("/", (req, res) => {
     res.json(addedMeasure)
 })
 
-measuresRouter.post("/swap", (req, res) => {
-    const measures = req.body
+measuresRouter.post("/reorder", (req, res) => {
+    const swapInfo = req.body
 
-    if (measures == null || measures.first == null || measures.second == null) {
+    if (swapInfo == null || swapInfo.measureName == null || swapInfo.up == null) {
         res.status(400).end()
         return
     }
 
-    const swapped = model.swapMeasures(measures.first, measures.second)
+    const swapped = model.reorderMeasure(swapInfo.measureName, swapInfo.up)
 
     res.status(swapped ? 200 : 400).end()
+})
+
+measuresRouter.post("/reset", (req, res) => {
+    const measure = req.body
+
+    if(measure == null || measure.name == null) {
+        res.status(400).end()
+        return
+    }
+
+    const resetted = model.resetMeasure(measure.name)
+
+    res.status(resetted ? 200 : 400).end()
 })
 
 module.exports = measuresRouter

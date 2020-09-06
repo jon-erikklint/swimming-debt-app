@@ -78,17 +78,44 @@ function addMeasurement(measureName, value) {
     return measurement
 }
 
-function swapMeasures(measureName1, measureName2) {
-    const measure1 = getMeasure(measureName1)
-    const measure2 = getMeasure(measureName2)
+function reorderMeasure(measureName, isUp) {
+    const measure = getMeasure(measureName)
+    if (measure == null) return false
 
-    if (measure1 == null || measure2 == null) return false
+    const id = measure.orderId
 
+    const measure2 = measures.reduce((best, m) => {
+        if (m === measure || (m.orderId >= id && isUp) || (m.orderId <= id && !isUp)) return best
+        if (best == null) return m
+
+        const isBetter = isUp
+            ? best.orderId < m.orderId && m.orderId < id
+            : best.orderId > m.orderId && m.orderId > id
+        return isBetter ? m : best
+    }, null)
+
+    // can't move up/down -> that is fine
+    if (measure2 == null) return true
+
+    swapMeasureOrder(measure, measure2)
+
+    return true
+}
+
+function swapMeasureOrder(measure1, measure2) {
     const temp = measure1.orderId
     measure1.orderId = measure2.orderId
     measure2.orderId = temp
 
     sortMeasures()
+}
+
+function resetMeasure(measureName) {
+    const measure = getMeasure(measureName)
+    if(measure == null) return false
+
+    measure.sum = 0
+    deleteMeasurements(measureName)
 
     return true
 }
@@ -112,5 +139,5 @@ function sortMeasures() {
 }
 
 module.exports = {
-    getMeasures, getMeasure, getMeasurements, deleteMeasure, addMeasure, addMeasurement, swapMeasures, updateMeasure, deleteMeasurements
+    getMeasures, getMeasure, getMeasurements, deleteMeasure, addMeasure, addMeasurement, reorderMeasure, resetMeasure, updateMeasure, deleteMeasurements
 }

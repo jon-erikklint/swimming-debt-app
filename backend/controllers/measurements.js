@@ -7,14 +7,6 @@ measurementsRouter.get("/:measureName", (req, res) => {
     res.json(model.getMeasurements(measureName))
 })
 
-measurementsRouter.delete("/:measureName", (req,res) => {
-    const measureName = req.params.measureName
-
-    model.deleteMeasurements(measureName)
-
-    res.json(model.getMeasurements(measureName))
-})
-
 measurementsRouter.post("/", (req, res) => {
     const measurement = req.body
 

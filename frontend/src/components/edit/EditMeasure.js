@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom"
+import { useParams, Redirect } from "react-router-dom"
 import axios from 'axios'
 
 import LabeledText from "../common/LabeledText"
@@ -7,24 +7,24 @@ import TextField from "../common/TextField"
 import LabeledCheckbox from "../common/LabeledCheckbox"
 import EditForm from "../common/EditForm"
 
-import redirectOnSubmit from "../hoc/redirectOnSubmit"
-
 import {validFloat} from "../../helpers/validators"
 import {formatFloat} from "../../helpers/formatters"
 
-export function EditMeasure(props){
+export function EditMeasure(){
     const measureName = useParams().name
     const [measure, setMeasure] = useState(undefined)
+    const [redirect, setRedirect] = useState(false)
 
     useEffect(() => {
-        console.log("asd")
         axios.get("http://localhost:3001/api/measures/" + measureName)
             .then(response => {
                 if(response.data != null && response.data !== "") setMeasure(response.data)
+                else setRedirect(true)
             })
     }, [])
 
-    if (measure == null) return null
+    if (redirect) return <Redirect to="/measures"/>
+    if (measure == null) return <div>Loading</div>
 
     const handleSubmit = obj => {
         const {reset, ...fields} = obj
@@ -33,17 +33,14 @@ export function EditMeasure(props){
             ...fields
         }
 
-        console.log(alteredMeasure)
-
         const promises = [axios.put("http://localhost:3001/api/measures/", alteredMeasure)]
-        if (reset) promises.push(axios.delete("http://localhost:3001/api/measurements/" + measureName))
+        if (reset) promises.push(axios.post("http://localhost:3001/api/measures/reset", alteredMeasure))
 
-        axios.all(promises).then(axios.spread((...responses) => {
-            console.log(responses[0])
-            if(reset) console.log(responses[1])
+        axios.all(promises).then(axios.spread(() => {
+            setRedirect(true)
         }))
 
-        props.onSubmit(alteredMeasure)
+        setMeasure(null)
     }
 
     const components = [
@@ -82,5 +79,4 @@ export function EditMeasure(props){
     </React.Fragment>)
 }
 
-const EditMeasureRedirect = redirectOnSubmit(EditMeasure, "/measures")
-export default EditMeasureRedirect
+export default EditMeasure
