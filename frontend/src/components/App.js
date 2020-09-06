@@ -42,27 +42,6 @@ export default class App extends React.Component {
         this.setState({measures})
     }
 
-    handleReorderMeasure = (measure, isUp) => {
-        const measures = this.state.measures
-        const index = measures.findIndex(measure2 => measure.name === measure2.name)
-
-        let swapIndex = isUp
-            ? (index === 0 ? index : index - 1)
-            : (index === measures.length - 1 ? index : index + 1)
-
-        if (index === swapIndex) return
-
-        // järjestys-id:t
-        const swapMeasure = measures[swapIndex]
-        
-        const tempId = swapMeasure.orderId
-        swapMeasure.orderId = measure.orderId
-        measure.orderId = tempId
-
-        // render järjestää itse elementit orderin mukaan
-        this.setState({measures: [...measures]})
-    }
-
     handleAddMeasure = measure => {
         this.setState({measures: [...this.state.measures, measure]})
     }
@@ -89,9 +68,7 @@ export default class App extends React.Component {
                     <WrappedMeasureHistory measures={measures}/>
                 </Route>
                 <Route path="/measures">
-                    <MeasuresList measures={measures}
-                                onDeleteMeasure={this.handleDeleteMeasure}
-                                onReorderMeasure={this.handleReorderMeasure}/>
+                    <MeasuresList/>
                 </Route>
                 <Route path="/">
                     <Balance measures={measures}
