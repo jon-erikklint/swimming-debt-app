@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Link } from "react-router-dom"
 
-import axios from 'axios'
+import measureService from "../../services/measureService"
 
 import MeasureControl from "./MeasureControl"
 
@@ -10,7 +10,7 @@ export default function MeasuresList() {
     const measureCount = measures.length
 
     const fetchMeasures = () => {
-        axios.get("http://localhost:3001/api/measures")
+        measureService.getAll()
             .then(response => {
                 setMeasures(response.data)
             })
@@ -19,14 +19,14 @@ export default function MeasuresList() {
     useEffect(fetchMeasures, [])
 
     const handleDelete = measure => {
-        axios.delete("http://localhost:3001/api/measures/" + measure.name)
+        measureService.deleteOne(measure)
             .then(_ => {
                 fetchMeasures()
             })
     }
 
     const handleReorder = (measure, isUp) => {
-        axios.post("http://localhost:3001/api/measures/reorder", {measureName: measure.name, up: isUp})
+        measureService.reorder(measure, isUp)
             .then(_ => {
                 fetchMeasures()
             })

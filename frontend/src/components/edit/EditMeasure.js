@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Redirect } from "react-router-dom"
 import axios from 'axios'
 
+import measureService from "../../services/measureService"
+
 import LabeledText from "../common/LabeledText"
 import TextField from "../common/TextField"
 import LabeledCheckbox from "../common/LabeledCheckbox"
@@ -16,7 +18,7 @@ export function EditMeasure(){
     const [redirect, setRedirect] = useState(false)
 
     useEffect(() => {
-        axios.get("http://localhost:3001/api/measures/" + measureName)
+        measureService.get(measureName)
             .then(response => {
                 if(response.data != null && response.data !== "") setMeasure(response.data)
                 else setRedirect(true)
@@ -33,8 +35,8 @@ export function EditMeasure(){
             ...fields
         }
 
-        const promises = [axios.put("http://localhost:3001/api/measures/", alteredMeasure)]
-        if (reset) promises.push(axios.post("http://localhost:3001/api/measures/reset", alteredMeasure))
+        const promises = [measureService.update(alteredMeasure)]
+        if (reset) promises.push(measureService.reset(measureName))
 
         axios.all(promises).then(axios.spread(() => {
             setRedirect(true)

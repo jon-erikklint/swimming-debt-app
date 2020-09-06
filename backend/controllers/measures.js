@@ -58,15 +58,10 @@ measuresRouter.post("/reorder", (req, res) => {
     res.status(swapped ? 200 : 400).end()
 })
 
-measuresRouter.post("/reset", (req, res) => {
-    const measure = req.body
+measuresRouter.post("/reset/:name", (req, res) => {
+    const name = req.params.name
 
-    if(measure == null || measure.name == null) {
-        res.status(400).end()
-        return
-    }
-
-    const resetted = model.resetMeasure(measure.name)
+    const resetted = model.resetMeasure(name)
 
     res.status(resetted ? 200 : 400).end()
 })
