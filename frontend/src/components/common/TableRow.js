@@ -1,15 +1,12 @@
 import React from 'react';
 
 export default function TableRow(props) {
-    const {
-        values,
-        first,
-        last
-    } = props
+    const { values, first, last } = props
+
     return (
         <tr>
             {createCell(first)}
-            {values.map((value, index) => <td key={index}>{value}</td>)}
+            {values.length > 0 ? values.map((value, index) => <td key={index}>{value}</td>) : null}
             {createCell(last)}
         </tr>
     )

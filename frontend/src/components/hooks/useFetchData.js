@@ -10,7 +10,9 @@ export default function useFetchData(callback) {
     }
 
     callback().then(res=> {
-      if(res.data !== null && res.data !== "") setData(res.data)
+      if(res.data !== null && res.data !== "") {
+        setData(res.data)
+      }
     })
   }
 

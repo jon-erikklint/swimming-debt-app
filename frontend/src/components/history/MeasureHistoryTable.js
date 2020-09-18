@@ -3,16 +3,17 @@ import React from 'react';
 import TableRow from "../common/TableRow"
 
 export default function MeasureHistoryTable(props) {
-    const {history, exchangeRatio, sum} = props.measure
+    const {exchangeRatio, sum} = props.measure
+    const measurements = props.measurements.map(measurement => measurement.value)
     const effectSum = sum * exchangeRatio
 
-    const headers = history.map((item, index) => "Transaktio: " + (index + 1))
+    const headers = measurements.map((item, index) => "Transaktio: " + (index + 1))
 
-    const values = history
-    const effectValues = history.map(item => item * exchangeRatio)
+    const values = measurements
+    const effectValues = measurements.map(item => item * exchangeRatio)
 
     let helpSum = 0
-    const totals = history.map(item => {
+    const totals = measurements.map(item => {
         helpSum += item
         return helpSum
     })
