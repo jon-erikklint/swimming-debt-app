@@ -1,24 +1,36 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import { Redirect } from "react-router-dom"
 
 import EditForm from "../common/EditForm"
 import TextField from "../common/TextField"
 
-import redirectOnSubmit from "../hoc/redirectOnSubmit"
-
-import MeasureModel from "../../models/MeasureModel"
-
 import {validName, validFloat} from "../../helpers/validators"
 import {formatFloat} from "../../helpers/formatters"
 
-export function CreateMeasure(props) {
+import useInitialFetchData from "../hooks/useInitialFetchData"
+import measureService from "../../services/measureService"
+
+export function CreateMeasure() {
+    const [redirect, setRedirect] = useState(false)
+    const [measures, _] = useInitialFetchData(() => measureService.getAll())
+
     const handleSubmit = obj => {
         const {name, sum, exchangeRatio} = obj
-        const orderId = props.measures.reduce((max, current) => current.orderId > max ? current.orderId : max, -1) + 1
 
-        const measure = new MeasureModel(name, sum, exchangeRatio, orderId)
-
-        props.onSubmit(measure)
+        const measure = {
+            name, exchangeRatio, startValue: sum
+        }
+        measureService.create(measure)
+            .then(res => {
+                if (res.status === 200) {
+                    setRedirect(true)
+                    return
+                }
+            })
     }
+
+    if (redirect) return <Redirect to="/measures"/>
+    if (measures == null) return (<div>Loading</div>)
 
     const components = [
         {
@@ -27,7 +39,7 @@ export function CreateMeasure(props) {
             value: "",
             Component: TextField,
             editable: true,
-            validator: (measures => name => validName(name, measures))(props.measures)
+            validator: (measures => name => validName(name, measures))(measures)
         },
         {
             label: "Vaihtosuhde",
@@ -50,14 +62,11 @@ export function CreateMeasure(props) {
     ]
 
     return (
-        <React.Fragment>
-            <EditForm headerText="Luo uusi mittari"
-                        submitText="Luo"
-                        onSubmit={handleSubmit}
-                        components={components}/>
-        </React.Fragment>
+        <EditForm headerText="Luo uusi mittari"
+                submitText="Luo"
+                onSubmit={handleSubmit}
+                components={components}/>
     )
 }
 
-const CreateMeasureRedirect = redirectOnSubmit(CreateMeasure, "/measures")
-export default CreateMeasureRedirect
+export default CreateMeasure

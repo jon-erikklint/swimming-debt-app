@@ -13,6 +13,10 @@ const update = alteredMeasure => {
   return axios.put(baseUrl, alteredMeasure)
 }
 
+const create = measure => {
+  return axios.post(baseUrl, measure)
+}
+
 const reset = measureName => {
   return axios.post(baseUrl + "reset/" + measureName)
 }
@@ -28,6 +32,7 @@ const reorder = (measure, up) => {
 export default {
   getAll,
   get,
+  create,
   update,
   reset,
   deleteOne,

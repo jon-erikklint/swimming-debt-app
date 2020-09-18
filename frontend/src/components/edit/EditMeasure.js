@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Redirect } from "react-router-dom"
 import axios from 'axios'
 
+import useInitialFetchData from "../hooks/useInitialFetchData"
 import measureService from "../../services/measureService"
 
 import LabeledText from "../common/LabeledText"
@@ -14,16 +15,8 @@ import {formatFloat} from "../../helpers/formatters"
 
 export function EditMeasure(){
     const measureName = useParams().name
-    const [measure, setMeasure] = useState(undefined)
+    const [measure, setMeasure] = useInitialFetchData(() => measureService.get(measureName))
     const [redirect, setRedirect] = useState(false)
-
-    useEffect(() => {
-        measureService.get(measureName)
-            .then(response => {
-                if(response.data != null && response.data !== "") setMeasure(response.data)
-                else setRedirect(true)
-            })
-    }, [])
 
     if (redirect) return <Redirect to="/measures"/>
     if (measure == null) return <div>Loading</div>
@@ -73,12 +66,11 @@ export function EditMeasure(){
     ]
 
     return (
-    <React.Fragment>
         <EditForm headerText="Muokkaa mittaria"
-                    submitText="Päivitä"
-                    components={components}
-                    onSubmit={handleSubmit}/>
-    </React.Fragment>)
+                submitText="Päivitä"
+                components={components}
+                onSubmit={handleSubmit}/>
+    )
 }
 
 export default EditMeasure

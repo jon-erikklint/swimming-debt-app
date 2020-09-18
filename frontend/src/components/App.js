@@ -8,7 +8,7 @@ import LinkBar from "./LinkBar"
 import Balance from "./balance/Balance"
 import MeasureHistory from "./history/MeasureHistory"
 import MeasuresList from "./measures/MeasuresList"
-import CreateMeasureRedirect from "./create/CreateMeasure"
+import CreateMeasure from "./create/CreateMeasure"
 import EditMeasure from "./edit/EditMeasure"
 
 import paramMeasureWrapper from "./hoc/paramMeasureWrapper"
@@ -42,10 +42,6 @@ export default class App extends React.Component {
         this.setState({measures})
     }
 
-    handleAddMeasure = measure => {
-        this.setState({measures: [...this.state.measures, measure]})
-    }
-
     render() {
         const measures = this.state.measures.sort((m1, m2) => m1.orderId - m2.orderId)
         const links = [
@@ -62,7 +58,7 @@ export default class App extends React.Component {
                     <EditMeasure/>
                 </Route>
                 <Route path="/measure/new">
-                    <CreateMeasureRedirect measures={measures} onSubmit={this.handleAddMeasure}/>
+                    <CreateMeasure/>
                 </Route>
                 <Route path="/measure/:name">
                     <WrappedMeasureHistory measures={measures}/>
@@ -79,5 +75,4 @@ export default class App extends React.Component {
         </Router>
         )
     }
-  
 }

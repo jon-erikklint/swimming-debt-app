@@ -35,7 +35,7 @@ measuresRouter.put("/", (req, res) => {
 measuresRouter.post("/", (req, res) => {
     const measure = req.body
     
-    if (measure == null || measure.name == null || measure.exchangeRatio == null || measure.startValue == null || getMeasure(measure.name) != null) {
+    if (measure == null || measure.name == null || measure.exchangeRatio == null || measure.startValue == null || model.getMeasure(measure.name) != null) {
         res.status(400).json()
         return
     }
