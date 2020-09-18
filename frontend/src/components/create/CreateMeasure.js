@@ -7,12 +7,12 @@ import TextField from "../common/TextField"
 import {validName, validFloat} from "../../helpers/validators"
 import {formatFloat} from "../../helpers/formatters"
 
-import useInitialFetchData from "../hooks/useInitialFetchData"
+import useFetchData from "../hooks/useFetchData"
 import measureService from "../../services/measureService"
 
 export function CreateMeasure() {
     const [redirect, setRedirect] = useState(false)
-    const [measures, _] = useInitialFetchData(() => measureService.getAll())
+    const [measures, _] = useFetchData(() => measureService.getAll())
 
     const handleSubmit = obj => {
         const {name, sum, exchangeRatio} = obj

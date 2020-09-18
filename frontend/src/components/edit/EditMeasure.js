@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, Redirect } from "react-router-dom"
 import axios from 'axios'
 
-import useInitialFetchData from "../hooks/useInitialFetchData"
+import useFetchData from "../hooks/useFetchData"
 import measureService from "../../services/measureService"
 
 import LabeledText from "../common/LabeledText"
@@ -15,7 +15,7 @@ import {formatFloat} from "../../helpers/formatters"
 
 export function EditMeasure(){
     const measureName = useParams().name
-    const [measure, setMeasure] = useInitialFetchData(() => measureService.get(measureName))
+    const [measure, updateMeasure] = useFetchData(() => measureService.get(measureName))
     const [redirect, setRedirect] = useState(false)
 
     if (redirect) return <Redirect to="/measures"/>
@@ -35,7 +35,7 @@ export function EditMeasure(){
             setRedirect(true)
         }))
 
-        setMeasure(null)
+        updateMeasure(null)
     }
 
     const components = [

@@ -1,36 +1,32 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { Link } from "react-router-dom"
 
 import measureService from "../../services/measureService"
 
 import MeasureControl from "./MeasureControl"
 
+import useFetchData from "../hooks/useFetchData"
+
 export default function MeasuresList() {
-    const [measures, setMeasures] = useState([])
-    const measureCount = measures.length
-
-    const fetchMeasures = () => {
-        measureService.getAll()
-            .then(response => {
-                setMeasures(response.data)
-            })
-    }
-
-    useEffect(fetchMeasures, [])
+    const [measures, updateMeasures] = useFetchData(() => measureService.getAll())
 
     const handleDelete = measure => {
         measureService.deleteOne(measure)
             .then(_ => {
-                fetchMeasures()
+                updateMeasures()
             })
     }
 
     const handleReorder = (measure, isUp) => {
         measureService.reorder(measure, isUp)
             .then(_ => {
-                fetchMeasures()
+                updateMeasures()
             })
     }
+
+    if (measures === null) return ""
+
+    const measureCount = measures.length
 
     return (
         <div>

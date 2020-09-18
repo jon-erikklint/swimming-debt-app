@@ -28,20 +28,6 @@ export default class App extends React.Component {
         }
     }
 
-    handleAddition = (name, addition) => {
-        this.updateMeasure(name, measure => {
-            const sum = measure.sum + addition
-    
-            return {...measure, sum, history: measure.history.concat([addition])}
-        })
-    }
-
-    updateMeasure(name, func) {
-        const measures = this.state.measures
-            .map(measure => measure.name == name ? func(measure) : measure)
-        this.setState({measures})
-    }
-
     render() {
         const measures = this.state.measures.sort((m1, m2) => m1.orderId - m2.orderId)
         const links = [
@@ -67,9 +53,7 @@ export default class App extends React.Component {
                     <MeasuresList/>
                 </Route>
                 <Route path="/">
-                    <Balance measures={measures}
-                            balance={this.state.measures.reduce((previous, current) => previous + (current.sum * current.exchangeRatio), 0)}
-                            onAddition={this.handleAddition}/>
+                    <Balance/>
                 </Route>
             </Switch>
         </Router>
