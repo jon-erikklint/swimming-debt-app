@@ -1,3 +1,6 @@
+const measureRepository = require('../database/measureRepository')
+const measurementRepository = require("../database/measurementRepository")
+
 let measures = [
     {
         name: "Asd",
@@ -27,24 +30,30 @@ let measurements = [
     }
 ]
 
-function getMeasures() {
-    return measures
+async function getMeasures() {
+    return await measureRepository.getAll()
 }
 
-function getMeasure(measureName) {
-    return measures.find(measure => measure.name === measureName)
+async function getMeasure(measureId) {
+    return await measureRepository.getOne(measureId)
 }
 
-function getMeasurements(measureName) {
-    return measurements.filter(measurement => measurement.measure === measureName)
+async function getMeasureByName(measureName) {
+    return await measureRepository.getByName(measureName)
 }
 
-function deleteMeasurements(measureName) {
-    measurements = measurements.filter(measurement => measurement.measure !== measureName)
+async function getMeasurements(measureId) {
+    return await measurementRepository.get(measureId)
 }
 
-function addMeasure(name, exchangeRatio, startValue) {
-    const orderId = measures.reduce((max, current) => current.orderId > max ? current.orderId : max, -1) + 1
+async function deleteMeasurements(measureId) {
+    return await measurementRepository.deleteAll(measureId)
+}
+
+async function addMeasure(name, exchangeRatio, startValue) {
+    console.log(name, exchangeRatio)
+    const index = await measureRepository.add(name, exchangeRatio)
+    /*const orderId = measures.reduce((max, current) => current.orderId > max ? current.orderId : max, -1) + 1
 
     const newMeasure = {
         name: name,
@@ -55,9 +64,9 @@ function addMeasure(name, exchangeRatio, startValue) {
 
     measures.push(newMeasure)
 
-    if(startValue > 0) addMeasurement(name, startValue)
+    if(startValue > 0) addMeasurement(name, startValue)*/
 
-    return newMeasure;
+    return index;
 }
 
 function addMeasurement(measureName, value) {
@@ -130,8 +139,8 @@ function updateMeasure(name, exchangeRatio) {
     return measure
 }
 
-function deleteMeasure(name) {
-    measures = measures.filter(measure => measure.name !== name)
+async function deleteMeasure(measureId) {
+    await measureRepository.deleteOne(measureId)
 }
 
 function sortMeasures() {
@@ -139,5 +148,5 @@ function sortMeasures() {
 }
 
 module.exports = {
-    getMeasures, getMeasure, getMeasurements, deleteMeasure, addMeasure, addMeasurement, reorderMeasure, resetMeasure, updateMeasure, deleteMeasurements
+    getMeasures, getMeasure, getMeasurements, deleteMeasure, addMeasure, addMeasurement, reorderMeasure, resetMeasure, updateMeasure, deleteMeasurements, getMeasureByName
 }

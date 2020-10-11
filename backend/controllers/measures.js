@@ -1,24 +1,24 @@
 const measuresRouter = require("express").Router()
 
-const model = require("../model")
+const model = require("../services/model")
 
-measuresRouter.get("/", (req, res) => {
-    res.json(model.getMeasures())
+measuresRouter.get("/", async (req, res) => {
+    res.json(await model.getMeasures())
 })
 
-measuresRouter.get("/:name", (req, res) => {
-    const name = req.params.name
-    res.json(model.getMeasure(name))
+measuresRouter.get("/:id", async (req, res) => {
+    const id = req.params.id
+    res.json(await model.getMeasure(id))
 })
 
-measuresRouter.delete("/:name", (req, res) => {
-    const name = req.params.name
-    model.deleteMeasure(name)
+measuresRouter.delete("/:id", async (req, res) => {
+    const id = req.params.id
+    await model.deleteMeasure(id)
 
     res.status(204).end()
 })
 
-measuresRouter.put("/", (req, res) => {
+measuresRouter.put("/", async (req, res) => {
     const measure = req.body
 
     if (measure == null || measure.name == null || measure.exchangeRatio == null) {
@@ -26,26 +26,26 @@ measuresRouter.put("/", (req, res) => {
         return
     }
 
-    const updatedMeasure = model.updateMeasure(measure.name, measure.exchangeRatio)
+    const updatedMeasure = await model.updateMeasure(measure.name, measure.exchangeRatio)
 
     if (updatedMeasure == null) res.status(404).end()
     else res.json(updatedMeasure)
 })
 
-measuresRouter.post("/", (req, res) => {
+measuresRouter.post("/", async (req, res) => {
     const measure = req.body
     
-    if (measure == null || measure.name == null || measure.exchangeRatio == null || measure.startValue == null || model.getMeasure(measure.name) != null) {
+    if (measure == null || measure.name == null || measure.exchangeRatio == null || measure.startValue == null || await model.getMeasureByName(measure.name) != null) {
         res.status(400).json()
         return
     }
 
-    const addedMeasure = model.addMeasure(measure.name, measure.exchangeRatio, measure.startValue)
+    const addedMeasure = await model.addMeasure(measure.name, measure.exchangeRatio, measure.startValue)
 
     res.json(addedMeasure)
 })
 
-measuresRouter.post("/reorder", (req, res) => {
+measuresRouter.post("/reorder", async (req, res) => {
     const swapInfo = req.body
 
     if (swapInfo == null || swapInfo.measureName == null || swapInfo.up == null) {
@@ -53,15 +53,15 @@ measuresRouter.post("/reorder", (req, res) => {
         return
     }
 
-    const swapped = model.reorderMeasure(swapInfo.measureName, swapInfo.up)
+    const swapped = await model.reorderMeasure(swapInfo.measureName, swapInfo.up)
 
     res.status(swapped ? 200 : 400).end()
 })
 
-measuresRouter.post("/reset/:name", (req, res) => {
+measuresRouter.post("/reset/:name", async (req, res) => {
     const name = req.params.name
 
-    const resetted = model.resetMeasure(name)
+    const resetted = await model.resetMeasure(name)
 
     res.status(resetted ? 200 : 400).end()
 })

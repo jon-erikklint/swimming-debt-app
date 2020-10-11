@@ -5,8 +5,8 @@ const getAll = () => {
   return axios.get(baseUrl)
 }
 
-const get = measureName => {
-  return axios.get(baseUrl + measureName)
+const get = measureId => {
+  return axios.get(baseUrl + measureId)
 }
 
 const update = alteredMeasure => {
@@ -17,12 +17,12 @@ const create = measure => {
   return axios.post(baseUrl, measure)
 }
 
-const reset = measureName => {
-  return axios.post(baseUrl + "reset/" + measureName)
+const reset = measureId => {
+  return axios.post(baseUrl + "reset/" + measureId)
 }
 
 const deleteOne = measure => {
-  return axios.delete(baseUrl + measure.name)
+  return axios.delete(baseUrl + measure.id)
 }
 
 const reorder = (measure, up) => {

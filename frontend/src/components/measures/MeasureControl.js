@@ -12,10 +12,10 @@ export default function MeasureControl(props) {
 
     return (
         <li className="listedMeasure">
-            <Link to={"/measure/" + measure.name}>
+            <Link to={"/measure/" + measure.id}>
                 {measure.name}
             </Link>
-            <Link className="listElement" to={"/measure/edit/" + measure.name}>
+            <Link className="listElement" to={"/measure/edit/" + measure.id}>
                 Muokkaa
             </Link>
             <span className="listElement clickable" onClick={handleClick}>

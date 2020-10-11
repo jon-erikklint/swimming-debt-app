@@ -9,8 +9,10 @@ import measureService from "../../services/measureService"
 import measurementService from "../../services/measurementService"
 
 export default function MeasureHistory() {
-    const measureName = useParams().name
-    const [[measure, measurements], _] = useMultifetchData(measureService.get(measureName), measurementService.get(measureName))
+    const measureId = useParams().id
+    const [[measure, measurements], _] = useMultifetchData(measureService.get(measureId), measurementService.get(measureId))
+
+    console.log(measure, measurements)
 
     if (measure == null || measurements == null) return <div>Loading</div>
 

@@ -22,13 +22,13 @@ export default function App () {
         <LinkBar links={links}/>
 
         <Switch>
-            <Route path="/measure/edit/:name">
+            <Route path="/measure/edit/:id">
                 <EditMeasure/>
             </Route>
             <Route path="/measure/new">
                 <CreateMeasure/>
             </Route>
-            <Route path="/measure/:name">
+            <Route path="/measure/:id">
                 <MeasureHistory/>
             </Route>
             <Route path="/measures">

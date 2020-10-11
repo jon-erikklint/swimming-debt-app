@@ -34,7 +34,7 @@ export default function MeasuresList() {
             <Link to="/measure/new">Luo uusi mittari</Link>
             <ul>
                 {measures.map((measure, index) => 
-                    <MeasureControl key={measure.name} 
+                    <MeasureControl key={measure.id} 
                                     measure={measure}
                                     hasOrderUp={index > 0}
                                     hasOrderDown={index < measureCount - 1}

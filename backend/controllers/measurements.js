@@ -1,13 +1,13 @@
 const measurementsRouter = require("express").Router()
 
-const model = require("../model")
+const model = require("../services/model")
 
-measurementsRouter.get("/:measureName", (req, res) => {
-    const measureName = req.params.measureName
-    res.json(model.getMeasurements(measureName))
+measurementsRouter.get("/:measureId", async (req, res) => {
+    const measureId = req.params.measureId
+    res.json(await model.getMeasurements(measureId))
 })
 
-measurementsRouter.post("/", (req, res) => {
+measurementsRouter.post("/", async (req, res) => {
     const measurement = req.body
 
     if (measurement == null || measurement.measure == null || measurement.value == null) {
@@ -15,7 +15,7 @@ measurementsRouter.post("/", (req, res) => {
         return
     }
 
-    const newMeasurement = model.addMeasurement(measurement.measure, measurement.value)
+    const newMeasurement = await model.addMeasurement(measurement.measure, measurement.value)
 
     if(newMeasurement == null) {
         res.status(404).end()

@@ -14,12 +14,14 @@ import {validFloat} from "../../helpers/validators"
 import {formatFloat} from "../../helpers/formatters"
 
 export function EditMeasure(){
-    const measureName = useParams().name
-    const [measure, updateMeasure] = useFetchData(() => measureService.get(measureName))
+    const measureId = useParams().id
+    const [measure, updateMeasure] = useFetchData(() => measureService.get(measureId))
     const [redirect, setRedirect] = useState(false)
 
     if (redirect) return <Redirect to="/measures"/>
     if (measure == null) return <div>Loading</div>
+
+    console.log(measure)
 
     const handleSubmit = obj => {
         const {reset, ...fields} = obj
@@ -29,7 +31,7 @@ export function EditMeasure(){
         }
 
         const promises = [measureService.update(alteredMeasure)]
-        if (reset) promises.push(measureService.reset(measureName))
+        if (reset) promises.push(measureService.reset(measureId))
 
         axios.all(promises).then(axios.spread(() => {
             setRedirect(true)
