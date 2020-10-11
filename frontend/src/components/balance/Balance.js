@@ -12,10 +12,10 @@ export default function Balance() {
 
     if (measures == null) return <div>Loading</div>
 
-    const balance = measures.reduce((total, current) => total + (current.sum * current.exchangeRatio), 0)
+    const balance = measures.reduce((total, current) => total + (current.valueSum * current.exchangeRatio), 0)
 
-    const handleAddition = (name, addition) => {
-        measurementService.create(name, addition)
+    const handleAddition = (measureId, addition) => {
+        measurementService.create(measureId, addition)
             .then(res => {
                 if(res.status === 200) updateMeasures()
             })

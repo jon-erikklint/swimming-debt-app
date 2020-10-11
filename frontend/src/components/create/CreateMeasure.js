@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { Redirect } from "react-router-dom"
 
 import EditForm from "../common/EditForm"
@@ -12,7 +12,7 @@ import measureService from "../../services/measureService"
 
 export function CreateMeasure() {
     const [redirect, setRedirect] = useState(false)
-    const [measures, _] = useFetchData(() => measureService.getAll())
+    const [measures] = useFetchData(() => measureService.getAll())
 
     const handleSubmit = obj => {
         const {name, sum, exchangeRatio} = obj

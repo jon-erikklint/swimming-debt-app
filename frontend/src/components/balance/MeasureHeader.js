@@ -11,7 +11,7 @@ export default function MeasureHeader(props) {
                     {measure.name}
                 </span></Link>
                  - vaihtosuhde: {measure.exchangeRatio}</div>
-            <div>Kokonaismäärä (kokonaisvaikutus): {measure.sum} ({measure.sum * measure.exchangeRatio})</div>
+            <div>Kokonaismäärä (kokonaisvaikutus): {measure.valueSum} ({measure.valueSum * measure.exchangeRatio})</div>
         </div>
     )
 }

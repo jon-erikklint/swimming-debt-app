@@ -1,7 +1,7 @@
 const database = require("./database")
 
 const baseQuery = `
-SELECT id, name, exchangeratio as "exchangeRatio", orderid
+SELECT id, name, exchangeratio as "exchangeRatio", orderid, valuesum as "valueSum"
 FROM measures
 `
 
@@ -29,6 +29,21 @@ async function add(name, exchangeRatio) {
   return (await database.add_query(query, [name, exchangeRatio])).id
 }
 
+async function updateSum(id) {
+  const query = `
+  UPDATE measures AS m SET valueSum = ms.valueSum
+  FROM (
+    SELECT SUM(amount) AS valueSum, measureid
+    FROM measurements
+    WHERE measureId = $1
+    GROUP BY measureId
+  ) AS ms
+  WHERE m.id = ms.measureid
+  `
+
+  return await database.query(query, [id])
+}
+
 module.exports = {
-  getAll, getOne, getByName, deleteOne, add
+  getAll, getOne, getByName, deleteOne, add, updateSum
 }

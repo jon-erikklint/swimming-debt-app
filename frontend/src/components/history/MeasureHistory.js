@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams } from "react-router-dom"
 
 import MeasureInfo from './MeasureInfo';
@@ -10,9 +10,7 @@ import measurementService from "../../services/measurementService"
 
 export default function MeasureHistory() {
     const measureId = useParams().id
-    const [[measure, measurements], _] = useMultifetchData(measureService.get(measureId), measurementService.get(measureId))
-
-    console.log(measure, measurements)
+    const [[measure, measurements]] = useMultifetchData(measureService.get(measureId), measurementService.get(measureId))
 
     if (measure == null || measurements == null) return <div>Loading</div>
 

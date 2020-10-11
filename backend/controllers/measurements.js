@@ -10,12 +10,12 @@ measurementsRouter.get("/:measureId", async (req, res) => {
 measurementsRouter.post("/", async (req, res) => {
     const measurement = req.body
 
-    if (measurement == null || measurement.measure == null || measurement.value == null) {
+    if (measurement == null || measurement.measureId == null || measurement.value == null) {
         res.status(400).end()
         return
     }
 
-    const newMeasurement = await model.addMeasurement(measurement.measure, measurement.value)
+    const newMeasurement = await model.addMeasurement(measurement.measureId, measurement.value)
 
     if(newMeasurement == null) {
         res.status(404).end()

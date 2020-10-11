@@ -5,8 +5,8 @@ const get = measureName => {
   return axios.get(baseUrl + measureName)
 }
 
-const create = (measureName, amount) => {
-  return axios.post(baseUrl, {measure: measureName, value: amount})
+const create = (measureId, amount) => {
+  return axios.post(baseUrl, {measureId: measureId, value: amount})
 }
 
 export default {

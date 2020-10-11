@@ -69,22 +69,16 @@ async function addMeasure(name, exchangeRatio, startValue) {
     return index;
 }
 
-function addMeasurement(measureName, value) {
-    const measure = getMeasure(measureName)
-    if(measureName == null) return null
+async function addMeasurement(measureId, value) {
+    const measure = await getMeasure(measureId)
+    if(measure == null) return null
 
-    const orderId = measurements.reduce((max, current) => current.orderId > max ? current.orderId : max, -1) + 1
+    const newId = await measurementRepository.add(measureId, value)
+    if (newId === null) return null;
 
-    const measurement = {
-        measure: measureName,
-        value: value,
-        orderId: orderId
-    }
+    await measureRepository.updateSum(measureId)
 
-    measurements.push(measurement)
-    measure.sum += measurement.value
-
-    return measurement
+    return newId
 }
 
 function reorderMeasure(measureName, isUp) {

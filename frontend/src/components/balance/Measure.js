@@ -29,7 +29,7 @@ export default class Measure extends React.Component {
         if(value === "" || isNaN(value)) return;
 
         this.setState({inputValue: "", errors: []})
-        this.props.onAddition(this.props.measure.name, parseFloat(value))
+        this.props.onAddition(this.props.measure.id, parseFloat(value))
     }
 
     render() {
