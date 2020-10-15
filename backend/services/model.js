@@ -1,35 +1,6 @@
 const measureRepository = require('../database/measureRepository')
 const measurementRepository = require("../database/measurementRepository")
 
-let measures = [
-    {
-        name: "Asd",
-        exchangeRatio: 1,
-        sum: 1,
-        orderId: 0
-    }, 
-    {
-        name: "Gasd",
-        exchangeRatio: 1,
-        sum: 0,
-        orderId: 1
-    }, 
-    {
-        name: "Wasd",
-        exchangeRatio: -1,
-        sum: 0,
-        orderId: 2
-    }
-]
-
-let measurements = [
-    {
-        measure: "Asd",
-        value: 1,
-        orderId: 0
-    }
-]
-
 async function getMeasures() {
     return await measureRepository.getAll()
 }
@@ -51,20 +22,9 @@ async function deleteMeasurements(measureId) {
 }
 
 async function addMeasure(name, exchangeRatio, startValue) {
-    console.log(name, exchangeRatio)
     const index = await measureRepository.add(name, exchangeRatio)
-    /*const orderId = measures.reduce((max, current) => current.orderId > max ? current.orderId : max, -1) + 1
 
-    const newMeasure = {
-        name: name,
-        exchangeRatio: exchangeRatio,
-        sum: startValue,
-        orderId: orderId
-    }
-
-    measures.push(newMeasure)
-
-    if(startValue > 0) addMeasurement(name, startValue)*/
+    addMeasurement(index, startValue)
 
     return index;
 }
@@ -81,49 +41,22 @@ async function addMeasurement(measureId, value) {
     return newId
 }
 
-function reorderMeasure(measureName, isUp) {
-    const measure = getMeasure(measureName)
-    if (measure == null) return false
-
-    const id = measure.orderId
-
-    const measure2 = measures.reduce((best, m) => {
-        if (m === measure || (m.orderId >= id && isUp) || (m.orderId <= id && !isUp)) return best
-        if (best == null) return m
-
-        const isBetter = isUp
-            ? best.orderId < m.orderId && m.orderId < id
-            : best.orderId > m.orderId && m.orderId > id
-        return isBetter ? m : best
-    }, null)
-
-    // can't move up/down -> that is fine
-    if (measure2 == null) return true
-
-    swapMeasureOrder(measure, measure2)
-
+async function reorderMeasure(measureId, isUp) {
+    await measureRepository.reorder(measureId, isUp)
     return true
 }
 
-function swapMeasureOrder(measure1, measure2) {
-    const temp = measure1.orderId
-    measure1.orderId = measure2.orderId
-    measure2.orderId = temp
-
-    sortMeasures()
-}
-
-function resetMeasure(measureName) {
-    const measure = getMeasure(measureName)
+async function resetMeasure(measureId) {
+    const measure = await getMeasure(measureId)
     if(measure == null) return false
 
     measure.sum = 0
-    deleteMeasurements(measureName)
+    await deleteMeasurements(measureId)
 
     return true
 }
 
-function updateMeasure(name, exchangeRatio) {
+async function updateMeasure(name, exchangeRatio) {
     const measure = getMeasure(name)
 
     if (measure == null) return null
@@ -135,10 +68,6 @@ function updateMeasure(name, exchangeRatio) {
 
 async function deleteMeasure(measureId) {
     await measureRepository.deleteOne(measureId)
-}
-
-function sortMeasures() {
-    measures = measures.sort((measure1, measure2) => measure1.orderId - measure2.orderId)
 }
 
 module.exports = {

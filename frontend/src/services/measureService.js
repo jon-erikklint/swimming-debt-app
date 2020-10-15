@@ -26,7 +26,7 @@ const deleteOne = measure => {
 }
 
 const reorder = (measure, up) => {
-  return axios.post(baseUrl + "reorder", {measureName: measure.name, up})
+  return axios.post(baseUrl + "reorder", {measureId: measure.id, up})
 }
 
 export default {

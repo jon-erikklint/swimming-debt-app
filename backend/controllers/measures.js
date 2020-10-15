@@ -48,12 +48,12 @@ measuresRouter.post("/", async (req, res) => {
 measuresRouter.post("/reorder", async (req, res) => {
     const swapInfo = req.body
 
-    if (swapInfo == null || swapInfo.measureName == null || swapInfo.up == null) {
+    if (swapInfo == null || swapInfo.measureId == null || swapInfo.up == null) {
         res.status(400).end()
         return
     }
 
-    const swapped = await model.reorderMeasure(swapInfo.measureName, swapInfo.up)
+    const swapped = await model.reorderMeasure(swapInfo.measureId, swapInfo.up)
 
     res.status(swapped ? 200 : 400).end()
 })
