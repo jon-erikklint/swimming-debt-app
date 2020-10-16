@@ -28,7 +28,7 @@ async function deleteOne(id) {
 } 
 
 async function add(name, exchangeRatio) {
-  const query = "INSERT INTO measures (name, exchangeRatio) VALUES ($1, $2) RETURNING id"
+  const query = "CALL add_measure($1, $2, NULL)"
   return (await database.add_query(query, [name, exchangeRatio])).id
 }
 
@@ -40,10 +40,12 @@ async function updateSum(id) {
   const query = `
   UPDATE measures AS m SET valueSum = ms.valueSum
   FROM (
-    SELECT SUM(amount) AS valueSum, measureid
-    FROM measurements
-    WHERE measureId = $1
-    GROUP BY measureId
+    SELECT COALESCE(SUM(amount), 0) AS valueSum, m.id as measureid
+	FROM measures as m
+    LEFT JOIN measurements as mm
+	ON m.id = mm.measureid 
+    WHERE m.id = 1
+    GROUP BY m.id
   ) AS ms
   WHERE m.id = ms.measureid
   `
@@ -51,6 +53,11 @@ async function updateSum(id) {
   return await database.query(query, [id])
 }
 
+async function update(id, name, exchangeRatio) {
+  const query = "UPDATE measures SET name = $1, exchangeratio = $2 WHERE id = $3"
+  return await database.query(query, [name, exchangeRatio, id])
+}
+
 module.exports = {
-  getAll, getOne, getMaxId, getByName, deleteOne, add, updateSum, reorder
+  getAll, getOne, getMaxId, getByName, deleteOne, add, updateSum, reorder, update
 }

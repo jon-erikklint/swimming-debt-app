@@ -1,7 +1,9 @@
-export function validName(name, measures) {
-    if(name === null || name === undefined || name.length === 0) return "Nimi ei saa olla tyhjä";
+export function validName(measures) {
+    return name => {
+        if(name === null || name === undefined || name.length === 0) return "Nimi ei saa olla tyhjä";
 
-    return measures.find(measure => measure.name === name) == null ? null : "Mittari " + name + " on jo olemassa"
+        return measures.find(measure => measure.name === name) == null ? null : "Mittari " + name + " on jo olemassa"
+    }
 }
 
 export function validFloat(text) {

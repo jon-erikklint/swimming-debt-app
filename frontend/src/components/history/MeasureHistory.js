@@ -14,6 +14,8 @@ export default function MeasureHistory() {
 
     if (measure == null || measurements == null) return <div>Loading</div>
 
+    console.log(measure, measurements)
+
     return (<div>
         <MeasureInfo measure={measure}/>
         <MeasureHistoryTable measure={measure} measurements={measurements}/>

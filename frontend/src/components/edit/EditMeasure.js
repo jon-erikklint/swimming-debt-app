@@ -10,18 +10,19 @@ import TextField from "../common/TextField"
 import LabeledCheckbox from "../common/LabeledCheckbox"
 import EditForm from "../common/EditForm"
 
-import {validFloat} from "../../helpers/validators"
+import {validFloat, validName} from "../../helpers/validators"
 import {formatFloat} from "../../helpers/formatters"
 
 export function EditMeasure(){
     const measureId = useParams().id
     const [measure, updateMeasure] = useFetchData(() => measureService.get(measureId))
+    const [measures] = useFetchData(() => measureService.getAll())
     const [redirect, setRedirect] = useState(false)
 
     if (redirect) return <Redirect to="/measures"/>
-    if (measure == null) return <div>Loading</div>
+    if (measure == null || measures == null) return <div>Loading</div>
 
-    console.log(measure)
+    const filteredMeasures = measures.filter(me => me.id != measure.id)
 
     const handleSubmit = obj => {
         const {reset, ...fields} = obj
@@ -45,8 +46,9 @@ export function EditMeasure(){
             field: "name", 
             label: "Nimi",
             value: measure.name, 
-            Component: LabeledText, 
-            editable: false
+            Component: TextField, 
+            editable: true,
+            validator: validName(filteredMeasures)
         },
         {
             field: "exchangeRatio", 

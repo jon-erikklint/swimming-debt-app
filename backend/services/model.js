@@ -18,13 +18,18 @@ async function getMeasurements(measureId) {
 }
 
 async function deleteMeasurements(measureId) {
-    return await measurementRepository.deleteAll(measureId)
+    if(await getMeasure(measureId) == null) return false
+
+    await measurementRepository.deleteAll(measureId)
+    await measureRepository.updateSum(measureId)
+
+    return true
 }
 
 async function addMeasure(name, exchangeRatio, startValue) {
     const index = await measureRepository.add(name, exchangeRatio)
 
-    addMeasurement(index, startValue)
+    await addMeasurement(index, startValue)
 
     return index;
 }
@@ -46,30 +51,16 @@ async function reorderMeasure(measureId, isUp) {
     return true
 }
 
-async function resetMeasure(measureId) {
-    const measure = await getMeasure(measureId)
-    if(measure == null) return false
-
-    measure.sum = 0
-    await deleteMeasurements(measureId)
-
+async function updateMeasure(measureId, name, exchangeRatio) {
+    await measureRepository.update(measureId, name, exchangeRatio)
     return true
 }
 
-async function updateMeasure(name, exchangeRatio) {
-    const measure = getMeasure(name)
-
-    if (measure == null) return null
-
-    measure.exchangeRatio = exchangeRatio
-
-    return measure
-}
-
 async function deleteMeasure(measureId) {
+    await measurementRepository.deleteAll(measureId)
     await measureRepository.deleteOne(measureId)
 }
 
 module.exports = {
-    getMeasures, getMeasure, getMeasurements, deleteMeasure, addMeasure, addMeasurement, reorderMeasure, resetMeasure, updateMeasure, deleteMeasurements, getMeasureByName
+    getMeasures, getMeasure, getMeasurements, deleteMeasure, addMeasure, addMeasurement, reorderMeasure, deleteMeasurements, updateMeasure, getMeasureByName
 }

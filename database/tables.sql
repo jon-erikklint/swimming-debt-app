@@ -16,5 +16,5 @@ CREATE TABLE measurements (
 	REFERENCES measures(id)
 );
 
-INSERT INTO measures (name, exchangeRatio) 
-VALUES ('Uinti', 1), ('Kävely', 0.25), ('Pyöräily', 0.1), ('Herkut', -5)
+INSERT INTO measures (name, exchangeRatio, orderId) 
+VALUES ('Uinti', 1, 1), ('Kävely', 0.25, 1), ('Pyöräily', 0.1, 2), ('Herkut', -5, 3)

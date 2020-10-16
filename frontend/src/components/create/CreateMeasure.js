@@ -39,7 +39,7 @@ export function CreateMeasure() {
             value: "",
             Component: TextField,
             editable: true,
-            validator: (measures => name => validName(name, measures))(measures)
+            validator: validName(measures)
         },
         {
             label: "Vaihtosuhde",

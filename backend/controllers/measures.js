@@ -21,12 +21,12 @@ measuresRouter.delete("/:id", async (req, res) => {
 measuresRouter.put("/", async (req, res) => {
     const measure = req.body
 
-    if (measure == null || measure.name == null || measure.exchangeRatio == null) {
+    if (measure == null || measure.id == null || measure.name == null || measure.exchangeRatio == null) {
         res.status(400).end()
         return
     }
 
-    const updatedMeasure = await model.updateMeasure(measure.name, measure.exchangeRatio)
+    const updatedMeasure = await model.updateMeasure(measure.id, measure.name, measure.exchangeRatio)
 
     if (updatedMeasure == null) res.status(404).end()
     else res.json(updatedMeasure)
@@ -58,10 +58,10 @@ measuresRouter.post("/reorder", async (req, res) => {
     res.status(swapped ? 200 : 400).end()
 })
 
-measuresRouter.post("/reset/:name", async (req, res) => {
-    const name = req.params.name
+measuresRouter.post("/reset/:id", async (req, res) => {
+    const id = req.params.id
 
-    const resetted = await model.resetMeasure(name)
+    const resetted = await model.deleteMeasurements(id)
 
     res.status(resetted ? 200 : 400).end()
 })
