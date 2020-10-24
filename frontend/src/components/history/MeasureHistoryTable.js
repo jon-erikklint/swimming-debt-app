@@ -3,9 +3,9 @@ import React from 'react';
 import TableRow from "../common/TableRow"
 
 export default function MeasureHistoryTable(props) {
-    const {exchangeRatio, sum} = props.measure
-    const measurements = props.measurements.map(measurement => measurement.value)
-    const effectSum = sum * exchangeRatio
+    const {exchangeRatio, valueSum} = props.measure
+    const measurements = props.measurements.map(measurement => measurement.amount)
+    const effectSum = valueSum * exchangeRatio
 
     const headers = measurements.map((item, index) => "Transaktio: " + (index + 1))
 
@@ -25,9 +25,9 @@ export default function MeasureHistoryTable(props) {
                 <TableRow values={headers} first="" last="Total"/>
             </thead>
             <tbody>
-                <TableRow values={values} first="Muutokset" last={sum}/>
+                <TableRow values={values} first="Muutokset" last={valueSum}/>
                 <TableRow values={effectValues} first="Reaalimuutokset" last={effectSum}/>
-                <TableRow values={totals} first="Kokonaissummat" last={sum}/>
+                <TableRow values={totals} first="Kokonaissummat" last={valueSum}/>
                 <TableRow values={totalEffects} first="Reaalisummat" last={effectSum}/>
             </tbody>
         </table>

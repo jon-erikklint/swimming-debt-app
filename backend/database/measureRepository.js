@@ -44,7 +44,7 @@ async function updateSum(id) {
 	FROM measures as m
     LEFT JOIN measurements as mm
 	ON m.id = mm.measureid 
-    WHERE m.id = 1
+    WHERE m.id = $1
     GROUP BY m.id
   ) AS ms
   WHERE m.id = ms.measureid

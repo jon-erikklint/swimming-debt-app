@@ -39,7 +39,7 @@ async function addMeasurement(measureId, value) {
     if(measure == null) return null
 
     const newId = await measurementRepository.add(measureId, value)
-    if (newId === null) return null;
+    if (newId === null) return null
 
     await measureRepository.updateSum(measureId)
 

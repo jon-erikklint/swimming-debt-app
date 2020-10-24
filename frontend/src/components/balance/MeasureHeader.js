@@ -7,7 +7,7 @@ export default function MeasureHeader(props) {
     return (
         <div>
             <div>
-                <Link to={"/measure/" + measure.name}><span className="nameLabel">
+                <Link to={"/measure/" + measure.id}><span className="nameLabel">
                     {measure.name}
                 </span></Link>
                  - vaihtosuhde: {measure.exchangeRatio}</div>
