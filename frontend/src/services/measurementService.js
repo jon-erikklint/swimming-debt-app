@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = "http://localhost:3001/api/measurements/"
+const baseUrl = "/api/measurements/"
 
 const get = measureId => {
   return axios.get(baseUrl + measureId)
