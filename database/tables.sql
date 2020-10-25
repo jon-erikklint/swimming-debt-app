@@ -17,4 +17,4 @@ CREATE TABLE measurements (
 );
 
 INSERT INTO measures (name, exchangeRatio, orderId) 
-VALUES ('Uinti', 1, 1), ('Kävely', 0.25, 1), ('Pyöräily', 0.1, 2), ('Herkut', -5, 3)
+VALUES ('Uinti', 1, 1), ('Kävely', 0.25, 2), ('Pyöräily', 0.1, 3), ('Herkut', -20, 4)
