@@ -4,11 +4,7 @@ const config = require("../utils/config")
 class Database {
   constructor() {
     this.pool = new Pool({
-      user: config.DB_USER,
-      password: config.DB_PASSWORD,
-      host: config.DB_HOST,
-      port: config.DB_PORT,
-      database: config.DB_NAME
+      connectionString: config.DATABASE_URL
     })
   }
 
