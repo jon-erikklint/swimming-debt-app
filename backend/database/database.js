@@ -1,13 +1,14 @@
 const { Pool } = require('pg')
+const config = require("../utils/config")
 
 class Database {
   constructor() {
     this.pool = new Pool({
-      user: "postgres",
-      password: "admin",
-      host: "localhost",
-      port: 5432,
-      database: "uintivelka"
+      user: config.DB_USER,
+      password: config.DB_PASSWORD,
+      host: config.DB_HOST,
+      port: config.DB_PORT,
+      database: config.DB_NAME
     })
   }
 
